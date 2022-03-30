@@ -1,0 +1,15 @@
+# Default ignored files
+/shelf/
+
+/out/
+
+*.iml
+
+.DS_Store
+*/.DS_Store
+.bak
+
+
+/.idea/
+**/.idea/
+**/out/

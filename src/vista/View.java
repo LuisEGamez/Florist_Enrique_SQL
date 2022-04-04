@@ -4,43 +4,30 @@ import entities.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-
+import java.util.List;
 
 
 public class View {
 
-    public static void showStock(ResultSet resultSetTrees, ResultSet resultSetFlowers, ResultSet resultSetDecor ) {
+    public static void showStock(List<Product> trees, List<Product> flowers, List<Product> decors ) {
 
-        try {
             showMessage("TREES:");
-            while (resultSetTrees.next()) {
-                showMessage(resultSetTrees.getString("name") + " " + resultSetTrees.getString("price") +
-                            " " + resultSetTrees.getString("height"));
-            }
+
+            trees.forEach(x -> showMessage(x.showInfo()));
+
+            showMessage("-----------------\n");
 
             showMessage("FLOWERS:");
-            while (resultSetFlowers.next()) {
-                showMessage(resultSetFlowers.getString("name") + " " + resultSetFlowers.getString("price") +
-                        " " + resultSetFlowers.getString("color"));
-            }
+
+            flowers.forEach(x -> showMessage(x.showInfo()));
+
+            showMessage("-----------------\n");
 
             showMessage("DECORATIONS:");
-            while (resultSetDecor.next()) {
-                showMessage(resultSetDecor.getString("name") + " " + resultSetDecor.getString("price") +
-                        " " + resultSetDecor.getString("material"));
-            }
 
-        }catch (SQLException e){
-            showMessage("Error al mostrar productos");
-            e.printStackTrace();
-        }
+            decors.forEach(x -> showMessage(x.showInfo()));
 
-    }
-
-    public static void showTotalValueFlorist(double totalValue) {
-
-        System.out.println("TOTAL VALUE:" + totalValue + "€");
+            showMessage("-----------------\n");
 
     }
 
@@ -66,44 +53,51 @@ public class View {
 
     }
 
-    /*public static void showInfoTicket(Ticket ticket) {
+    public static void showTotalValueFlorist(double totalValue) {
 
-        //System.out.println("TICKET NUMBER: " + ticket.getNumTicket() +
-                            //"\nDATE: " + ticket.getDate());
+        System.out.println("TOTAL VALUE: " + totalValue + "€");
+
+    }
+
+
+    public static void showInfoTicket(Ticket ticket) {
+
+        System.out.println("TICKET NUMBER: " + ticket.getNumTicket() +
+                            "\nDATE: " + ticket.getDate());
 
         for (Product product : ticket.getProducts()) {
 
             if (product instanceof Tree) {
 
                 Tree tree = (Tree) product;
-                //System.out.println(tree.showInfo());
+                System.out.println(tree.showInfo());
 
             } else if (product instanceof Flower) {
 
                 Flower flower = (Flower) product;
-                //System.out.println(flower.showInfo());
+                System.out.println(flower.showInfo());
 
             } else if (product instanceof Decor) {
 
                 Decor decor = (Decor) product;
-                //System.out.println(decor.showInfo());
+                System.out.println(decor.showInfo());
             }
         }
 
         System.out.println("TICKET TOTAL: " + ((double) Math.round(ticket.getTotal() * 100d) / 100d) + "€");
-    }*/
+    }
 
-    /*public static void showOldTickets(List<Ticket> oldTickets) {
+    public static void showOldTickets(List<Ticket> oldTickets) {
 
         oldTickets.forEach(x -> showInfoTicket(x));
 
-    }*/
+    }
 
     public static void showRemoveMessageConfirmation(boolean exist) { // Revisar
         if (exist) {
             System.out.println("PRODUCT SUCCESSFULLY REMOVE.");
         } else {
-            System.out.println("PRODUCT NOT FOUND.");
+            System.out.println("PRODUCT NOT REMOVE.");
         }
     }
 
@@ -155,7 +149,7 @@ public class View {
         }
     }
 
-    public static void productAdded ( boolean result){
+    public static void productAdded (boolean result){
         if (result) {
             System.out.println("PRODUCT SUCCESSFULLY ADDED.");
         } else {

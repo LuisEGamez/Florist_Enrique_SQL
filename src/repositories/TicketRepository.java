@@ -1,24 +1,20 @@
 package repositories;
 
-import database.Database;
-import entities.Ticket;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.time.LocalDate;
+import entities.Ticket;
+import vista.View;
+
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TicketRepository {
 
-    private Database database;
 
     private Connection connection;
 
-    public TicketRepository(Database database) throws SQLException {
-        this.database = database;
+    public TicketRepository() throws SQLException {
         connection = DriverManager.getConnection("jdbc:mysql://localhost:3307/Florist_Enrique_SQL","root", "");
     }
 
@@ -32,8 +28,9 @@ public class TicketRepository {
         PreparedStatement miQuery;
 
         try {
-            miQuery = connection.prepareStatement("INSERT INTO ticket () VALUES ()");
-
+            miQuery = connection.prepareStatement("INSERT INTO ticket (productos, total) VALUES (?, ?)");
+            miQuery.setString(1, ticket.listProductsToJson());
+            miQuery.setDouble(2, ticket.getTotal());
             miQuery.executeUpdate();
             added = true;
 
@@ -45,33 +42,51 @@ public class TicketRepository {
         return added;
     }
 
-    public Ticket findOne(int i){
+    /*public Ticket findOne(int i){
 
-        return database.getTickets().get(i);
+
 
     }
 
     public List<Ticket> findAll(){
 
-        return database.getTickets();
 
-    }
 
-    /*public List<Ticket> getOldSales(LocalDate date1) {
+    }*/
+
+    public List<Ticket> getOldSales(String date1, String date2) {
 
         List<Ticket> oldTickets = new ArrayList<>();
 
-        for (int i = 0; i < findAll().size(); i++) {
+        Ticket ticket;
+        PreparedStatement query;
+        ResultSet rs;
 
-            if (findOne(i).getDate().compareTo(date1) <= 0) {
+        try {
 
-                oldTickets.add(findOne(i));
+            query = connection.prepareStatement("SELECT * FROM `ticket` WHERE date  between ? and ?");
+            query.setString(1, date1);
+            query.setString(2, date2);
+            rs = query.executeQuery();
+            while (rs.next()){
+
+                ticket = new Ticket();
+                ticket.setNumTicket(rs.getInt("id_ticket"));
+                ticket.setDate(rs.getString("date"));
+                ticket.setProductos(rs.getString("productos"));
+                ticket.setTotal(rs.getDouble("Total"));
+
+                oldTickets.add(ticket);
 
             }
+
+        } catch (SQLException e) {
+            View.showMessage("Error al buscar un tree");
+            e.printStackTrace();
         }
 
         return oldTickets;
-    }*/
+    }
 
     /*public List<Ticket> getOldSales(LocalDate date1, LocalDate date2){
 
@@ -89,7 +104,7 @@ public class TicketRepository {
         return oldTickets;
     }*/
 
-    public List<Double> getTotalPricesFromDatabase(){
+    /*public List<Double> getTotalPricesFromDatabase(){
 
         List<Double> totalSalesList = new ArrayList<>();
 
@@ -99,6 +114,6 @@ public class TicketRepository {
         }
         return totalSalesList;
 
-    }
+    }*/
 
 }

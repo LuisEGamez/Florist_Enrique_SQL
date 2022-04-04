@@ -1,25 +1,91 @@
 package repositories;
 
-import database.Database;
+
 import entities.Product;
 import entities.Tree;
 import vista.View;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TreeRepository {
 
-    private Database database;
 
     private Connection connection;
 
-    public TreeRepository(Database database) throws SQLException {
-        this.database = database;
+    public TreeRepository() throws SQLException {
         connection = DriverManager.getConnection("jdbc:mysql://localhost:3307/Florist_Enrique_SQL","root", "");
     }
 
-    public Tree createTree(String name, double price, double height){
-        return new Tree(name, price, height);
+    public Tree createTree(String name, double price, double height, int quantity){
+        return new Tree(name, price, height, quantity);
+    }
+
+    public Tree createTree(String name, double height, int quantity){
+        return new Tree(name, height, quantity);
+    }
+
+    public boolean exists (Tree tree){
+
+        boolean exists = false;
+        PreparedStatement miQuery;
+        ResultSet rs;
+
+        try {
+            miQuery = connection.prepareStatement("SELECT * FROM tree WHERE name = ? AND height = ?");
+            miQuery.setString(1, tree.getName());
+            miQuery.setDouble(2, tree.getHeight());
+            rs = miQuery.executeQuery();
+
+            if (rs.next()){
+                exists = true;
+            }
+
+        } catch (SQLException e) {
+            View.showMessage("Error al comprobar la existencia de tree");
+            e.printStackTrace();
+        }
+
+        return exists;
+
+    }
+
+    public PreparedStatement insertTree(Tree tree) throws SQLException {
+
+        PreparedStatement miQuery;
+
+            miQuery = connection.prepareStatement("INSERT INTO tree (name, price, height, quantity) VALUES ( ? , ?, ?, ?)");
+            miQuery.setString(1, tree.getName());
+            miQuery.setDouble(2, tree.getPrice());
+            miQuery.setDouble(3, tree.getHeight());
+            miQuery.setInt(4, tree.getQuantity());
+
+        return miQuery;
+    }
+
+    public PreparedStatement increaseQuantityTree(Tree tree) throws SQLException {
+
+        PreparedStatement miQuery;
+
+        miQuery = connection.prepareStatement("UPDATE tree SET quantity = quantity + ?  WHERE name = ? AND height = ? ");
+        miQuery.setDouble(1, tree.getQuantity());
+        miQuery.setString(2, tree.getName());
+        miQuery.setDouble(3, tree.getHeight());
+
+        return miQuery;
+    }
+
+    public PreparedStatement decreaseQuantityTree(Tree tree) throws SQLException {
+
+        PreparedStatement miQuery;
+
+        miQuery = connection.prepareStatement("UPDATE tree SET quantity = quantity - ?  WHERE name = ? AND height = ? ");
+        miQuery.setDouble(1, tree.getQuantity());
+        miQuery.setString(2, tree.getName());
+        miQuery.setDouble(3, tree.getHeight());
+
+        return miQuery;
     }
 
     public boolean addTree (Tree tree )  {
@@ -28,17 +94,20 @@ public class TreeRepository {
         PreparedStatement miQuery;
 
         try {
-            miQuery = connection.prepareStatement("INSERT INTO tree (name, price, height) VALUES ( ? , ?, ?)");
+            if (!exists(tree)) {
 
-            miQuery.setString(1, tree.getName());
-            miQuery.setDouble(2, tree.getPrice());
-            miQuery.setDouble(3, tree.getHeight());
+                miQuery = insertTree(tree);
 
+            }else{
+
+                miQuery = increaseQuantityTree(tree);
+
+            }
             miQuery.executeUpdate();
             added = true;
 
         } catch (SQLException e) {
-            View.showMessage("Error al insertar tree");
+            View.showMessage("Error al añadir tree");
             e.printStackTrace();
         }
 
@@ -46,52 +115,74 @@ public class TreeRepository {
 
     }
 
-    public boolean removeTree(String name){
+    public boolean removeTree(Tree tree){
 
         boolean removed = false;
+        int quantity = 0;
+        ResultSet rs;
         PreparedStatement miQuery;
 
-        try {
-            miQuery = connection.prepareStatement("DELETE FROM tree WHERE name = ? LIMIT 1");
+        if(exists(tree)){
+            try {
+                miQuery = connection.prepareStatement("SELECT quantity FROM tree WHERE name = ? And height = ?");
+                miQuery.setString(1,tree.getName());
+                miQuery.setDouble(2, tree.getHeight());
+                rs = miQuery.executeQuery();
+                if(rs.next()) {
+                    quantity = rs.getInt("quantity");
+                }
 
-            miQuery.setString(1, name);
-
-            miQuery.executeUpdate();
-            removed = true;
-
-        } catch (SQLException e) {
-            View.showMessage("Error al borrar tree");
-            e.printStackTrace();
+                if( quantity >= tree.getQuantity() ){
+                    miQuery = decreaseQuantityTree(tree);
+                    miQuery.executeUpdate();
+                    removed = true;
+                }else {
+                    View.showMessage("La cantidad introducida supera el stock actual");
+                }
+            } catch (SQLException e) {
+                View.showMessage("Error al eliminar cantidad tree");
+                e.printStackTrace();
+            }
         }
 
         return removed;
     }
 
     public Product findOne (String name){
-        Product product = null;
-        boolean exist = false;
-        int i = 0;
 
-        while (!exist && i< database.getTrees().size()) {
+        Tree tree = null;
+        PreparedStatement query;
+        ResultSet rs;
 
-            if (name.equalsIgnoreCase(database.getTrees().get(i).getName())) {
+        try {
 
-                exist = true;
-                product = database.getTrees().get(i);
+            query = connection.prepareStatement("SELECT * FROM tree WHERE name = ? LIMIT 1");
+            query.setString(1, name);
+            rs = query.executeQuery();
+            while (rs.next()){
+                tree = new Tree();
+                tree.setName(rs.getString("name"));
+                tree.setPrice(rs.getDouble("price"));
+                tree.setHeight(rs.getDouble("height"));
 
             }
-            i++;
+
+        } catch (SQLException e) {
+            View.showMessage("Error al buscar un tree");
+            e.printStackTrace();
         }
-        return product;
+
+        return tree;
     }
 
     public ResultSet getTreeStockQuantity(){
         Statement query;
         ResultSet resultSet = null;
+
         try {
+
             query = connection.createStatement();
             resultSet = query.executeQuery("SELECT COUNT(*) FROM tree");
-
 
         } catch (SQLException e) {
             View.showMessage("Error al al contar trees");
@@ -102,25 +193,47 @@ public class TreeRepository {
 
     }
 
-    public ResultSet getTreesFromDatabase(){
-        Statement statement = null;
-        ResultSet resultSet = null;
+    public List<Product> getTreesFromDatabase(){
+        List<Product> trees = new ArrayList<>();
+        Tree tree;
+        Statement statement;
+        ResultSet rs;
         try {
 
             statement= connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM tree");
+            rs = statement.executeQuery("SELECT * FROM tree");
+
+            while (rs.next()) {
+                tree = new Tree();
+                tree.setName(rs.getString("name"));
+                tree.setHeight(rs.getDouble("height"));
+                tree.setPrice(rs.getDouble("price"));
+                tree.setQuantity(rs.getInt("quantity"));
+                trees.add(tree);
+            }
 
         } catch (SQLException e) {
             View.showMessage("Error al realizar la búsqueda en tree");
             e.printStackTrace();
         }
 
-        return resultSet;
+        return trees;
     }
 
-    public double getTreePrice(int i){
+    public ResultSet getTotalPrice(){
 
-        return database.getTrees().get(i).getPrice();
+        Statement statement;
+        ResultSet resultSet = null;
+        try {
 
+            statement= connection.createStatement();
+            resultSet = statement.executeQuery("SELECT SUM(price) AS \"Total\" FROM tree");
+
+        } catch (SQLException e) {
+            View.showMessage("Error al realizar la suma del precio en tree");
+            e.printStackTrace();
+        }
+
+        return resultSet;
     }
 }

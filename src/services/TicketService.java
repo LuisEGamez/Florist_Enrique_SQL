@@ -22,29 +22,28 @@ public class TicketService {
         this.decorRepository = decorRepository;
     }
 
-    /*public boolean addProduct(Ticket ticket, String name) {
+    public boolean addProduct(Ticket ticket, String name) {
 
         boolean result = false;
         Product tree = treeRepository.findOne(name);
         Product flower = flowerRepository.findOne(name);
         Product decor = decorRepository.findOne(name);
-        if(tree != null ){
+        if(tree!= null){
             ticket.getProducts().add(tree);
-            treeRepository.removeTree(name);
             result = true;
-        }else if(flower != null){
+        }else if(flower!=null){
             ticket.getProducts().add(flower);
-            flowerRepository.removeFlower(name);
             result = true;
         }else if(decor != null){
             ticket.getProducts().add(decor);
-            decorRepository.removeDecor(name);
             result = true;
         }
-        return result;
-    }*/
 
-    /*public void total(Ticket ticket) {
+        return result;
+
+    }
+
+    public void total(Ticket ticket) {
 
         double totalPriceTicket = 0;
 
@@ -54,14 +53,14 @@ public class TicketService {
         }
 
         ticket.setTotal(totalPriceTicket);
-    }*/
+    }
 
-    public double getTotalSales(){
+    /*public double getTotalSales(){
         double totalSales = 0;
         for(Double totalPrice : ticketRepository.getTotalPricesFromDatabase()){
             totalSales += totalPrice;
         }
         return totalSales;
 
-    }
+    }*/
 }

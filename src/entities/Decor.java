@@ -4,9 +4,30 @@ public class Decor extends Product {
 
     private String typeOfMaterial;
 
-    public Decor(String name, double price){
-        super(name, price);
+    public Decor() {
+    }
+
+    public Decor(String name) {
+        super(name);
         typeOfMaterial = "";
+    }
+
+    public Decor(String name, String typeOfMaterial, int quantity) {
+        super(name, quantity);
+        this.typeOfMaterial = typeOfMaterial;
+    }
+
+    public Decor(String name, double price, int quantity){
+        super(name, price, quantity);
+        typeOfMaterial = "";
+    }
+
+    public String getMaterial() {
+        return this.typeOfMaterial;
+    }
+
+    public void setTypeOfMaterial(String typeOfMaterial) {
+        this.typeOfMaterial = typeOfMaterial;
     }
 
     public boolean setTypeOfMaterial(int type) {
@@ -21,8 +42,9 @@ public class Decor extends Product {
         return select;
     }
 
-    public String getMaterial() {
-        return this.typeOfMaterial;
+    @Override
+    public String showInfo() {
+        return "Nombre decoración: " + super.getName() + "\nMaterial: " + this.typeOfMaterial + "\nPrecio: " + super.getPrice() + "€\n" + super.getQuantity() + " Uds";
     }
 
 }

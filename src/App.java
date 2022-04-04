@@ -1,4 +1,3 @@
-import database.Database;
 import entities.Decor;
 import entities.Florist;
 import entities.Ticket;
@@ -11,9 +10,8 @@ import services.TicketService;
 import tools.Keyboard;
 import vista.View;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDate;
+
 
 
 public class App {
@@ -22,7 +20,6 @@ public class App {
 
         Florist florist = new Florist("Margarita", "C/ Peru 254", "698574526");
 
-        Database database = new Database();
 
         TreeRepository treeRepository = null;
         FlowerRepository flowerRepository = null;
@@ -30,10 +27,10 @@ public class App {
         TicketRepository ticketRepository = null;
         try {
 
-            treeRepository = new TreeRepository(database);
-            flowerRepository = new FlowerRepository(database);
-            decorRepository = new DecorRepository(database);
-            ticketRepository = new TicketRepository(database);
+            treeRepository = new TreeRepository();
+            flowerRepository = new FlowerRepository();
+            decorRepository = new DecorRepository();
+            ticketRepository = new TicketRepository();
 
         } catch (SQLException e) {
 
@@ -43,6 +40,7 @@ public class App {
         }
 
         FloristService floristService = new FloristService(treeRepository,flowerRepository,decorRepository,ticketRepository);
+
         TicketService ticketService = new TicketService(ticketRepository,treeRepository, flowerRepository, decorRepository);
 
         //------------- Menu ------------------
@@ -64,16 +62,18 @@ public class App {
                     case 1:
 
                         View.treeAdded(treeRepository.addTree(treeRepository.createTree(Keyboard.readString("ENTER NAME."),
+                                                                                            Keyboard.readDouble("ENTER HEIGHT"),
                                                                                             Keyboard.readDouble("ENTER PRICE"),
-                                                                                            Keyboard.readDouble("ENTER HEIGHT"))));
+                                                                                            Keyboard.readInt("ENTER QUANTITY"))));
                         break;
                     case 2:
                         View.flowerAdded(flowerRepository.addFlower(flowerRepository.createFlower(Keyboard.readString("ENTER NAME."),
+                                                                                                    Keyboard.readString("ENTER COLOR."),
                                                                                                     Keyboard.readDouble("ENTER PRICE"),
-                                                                                                    Keyboard.readString("ENTER COLOR."))));
+                                                                                                    Keyboard.readInt("ENTER QUANTITY"))));
                         break;
                     case 3:
-                        Decor decor = decorRepository.createDecor(Keyboard.readString("ENTER NAME."),Keyboard.readDouble("ENTER PRICE"));
+                        Decor decor = decorRepository.createDecor(Keyboard.readString("ENTER NAME.")); // arreglar variales
                         boolean select;
                         do{
                             select = decor.setTypeOfMaterial(Keyboard.readInt("""
@@ -82,6 +82,8 @@ public class App {
                                                                         2-PLASTIC"""));
                             if(!select){View.showMessage("SELECT 1 OR 2");}
                         }while (!select);
+                        decor.setPrice(Keyboard.readDouble("ENTER PRICE"));
+                        decor.setQuantity(Keyboard.readInt("ENTER QUANTITY"));
                         View.decorAdded(decorRepository.addDecor(decor));
                         break;
 
@@ -90,49 +92,68 @@ public class App {
                         break;
 
                     case 5:
-                        View.showRemoveMessageConfirmation(treeRepository.removeTree(Keyboard.readString("ENTER NAME")));
+                        View.showRemoveMessageConfirmation(treeRepository.removeTree(treeRepository.createTree(Keyboard.readString("ENTER NAME"),
+                                                                                                                Keyboard.readDouble("ENTER HEIGHT"),
+                                                                                                                Keyboard.readInt("ENTER QUANTITY"))));
                         break;
 
                     case 6:
-                        View.showRemoveMessageConfirmation(flowerRepository.removeFlower(Keyboard.readString("ENTER NAME")));
+                        View.showRemoveMessageConfirmation(flowerRepository.removeFlower(flowerRepository.createFlower(Keyboard.readString("ENTER NAME"),
+                                                                                                                        Keyboard.readString("ENTER COLOR"),
+                                                                                                                        Keyboard.readInt("ENTER QUANTITY"))));
                         break;
 
                     case 7:
-                        View.showRemoveMessageConfirmation(decorRepository.removeDecor(Keyboard.readString("ENTER NAME")));
+                        Decor decor1 = decorRepository.createDecor(Keyboard.readString("ENTER NAME."));// arreglar variales
+                        boolean select1;
+                        do{
+                            select1 = decor1.setTypeOfMaterial(Keyboard.readInt("""
+                                                                        MATERIAL:\s
+                                                                        1-WOOD
+                                                                        2-PLASTIC"""));
+                            if(!select1){View.showMessage("SELECT 1 OR 2");}
+                        }while (!select1);
+                        decor1.setQuantity(Keyboard.readInt("ENTER QUANTITY"));
+                        View.showRemoveMessageConfirmation(decorRepository.removeDecor(decor1));
                         break;
 
                     case 8:
 
-                        View.showStockByProduct(floristService.quantityTreesStock(), floristService.quantityFlowersStock(), floristService.quantityDecorsStock() );
+                        View.showStockByProduct(floristService.quantityTreesStock(), floristService.quantityFlowersStock(),
+                                                    floristService.quantityDecorsStock());
                         break;
 
                     case 9:
-                        //View.showTotalValueFlorist(floristService.getTotalValue());
+                        View.showTotalValueFlorist(floristService.getTotalValue());
                         break;
 
-                    /*case 10:
+                    case 10:
                         String x;
                         Ticket ticket = ticketRepository.createTicket();
                         do {
+
                             View.productAdded(ticketService.addProduct(ticket, Keyboard.readString("ENTER NAME")));
                             x = Keyboard.readString("1-ADD PRODUCT" + "\n0-EXIT");
+
                         }while (!x.equalsIgnoreCase("0"));
+
                         if (!ticket.getProducts().isEmpty()){
                             ticketService.total(ticket);
+                            ticket.showProductos();
+                            View.showMessage(ticket.listProductsToJson());
                             View.ticketAdded(ticketRepository.addTicket(ticket));
                         }else {
                             View.showMessage("TICKET NOT ADDED, PRODUCT LIST EMPTY");
                         }
-                        break;*/
 
-                    /*case 11:
-                        View.showOldTickets(ticketRepository.getOldSales(LocalDate.of(Keyboard.readInt("Year YYYY"),
-                                                                                        Keyboard.readInt("MONTH 00"),
-                                                                                        Keyboard.readInt("DAY 00"))));
-                        break;*/
+                        break;
+
+                    case 11:
+                        View.showOldTickets(ticketRepository.getOldSales(Keyboard.readString("INTRODUZCA FECHA"), Keyboard.readString("INTRODUZCA FECHA")));
+                        break;
 
                     case 12:
-                        View.showTotalSales(ticketService.getTotalSales());
+                        //View.showTotalSales(ticketService.getTotalSales());
                         break;
                 }
 

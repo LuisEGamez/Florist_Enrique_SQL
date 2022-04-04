@@ -1,6 +1,5 @@
 package services;
 
-import entities.Florist;
 import entities.Product;
 import repositories.DecorRepository;
 import repositories.FlowerRepository;
@@ -9,6 +8,7 @@ import repositories.TreeRepository;
 import vista.View;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public class FloristService {
@@ -20,7 +20,8 @@ public class FloristService {
 
 
 
-    public FloristService(TreeRepository treeRepository, FlowerRepository flowerRepository, DecorRepository decorRepository, TicketRepository ticketRepository) {
+    public FloristService(TreeRepository treeRepository, FlowerRepository flowerRepository,
+                          DecorRepository decorRepository, TicketRepository ticketRepository){
         this.treeRepository = treeRepository;
         this.flowerRepository = flowerRepository;
         this.decorRepository = decorRepository;
@@ -44,36 +45,46 @@ public class FloristService {
         return decorRepository.getDecorStockQuantity();
 
     }
-    /*public double getTotalValue(){
+
+    public double getTotalValue(){
         double result = 0;
-        for(int i = 0; i<treeRepository.getTreeStockQuantity(); i++){
+        try {
+            ResultSet rsTree = treeRepository.getTotalPrice();
+            ResultSet rsFlower = flowerRepository.getTotalPrice();
+            ResultSet rsDecor = decorRepository.getTotalPrice();
 
-            result += treeRepository.getTreePrice(i);
+            if (rsTree.next()){
+                result += rsTree.getDouble("Total");
+            }
 
+            if (rsFlower.next()){
+                result += rsFlower.getDouble("Total");
+            }
+
+            if (rsDecor.next()){
+                result += rsDecor.getDouble("Total");
+            }
+
+        }catch (SQLException e){
+            View.showMessage("Error al calcular el precio total");
+            e.printStackTrace();
         }
-        for(int i = 0; i< flowerRepository.getFlowerStockQuantity(); i++){
 
-            result += flowerRepository.getFlowerPrice(i);
-        }
-        for(int i = 0; i< decorRepository.getDecorStockQuantity(); i++){
-
-            result += decorRepository.getDecorPrice(i);
-        }
         return result;
 
-    }*/
+    }
 
-    public ResultSet getTrees(){
+    public List<Product> getTrees(){
 
         return treeRepository.getTreesFromDatabase();
     }
 
-    public ResultSet getFlowers(){
+    public List<Product> getFlowers(){
 
         return flowerRepository.getFlowersFromDatabase();
     }
 
-    public ResultSet getDecorations(){
+    public List<Product> getDecorations(){
 
         return  decorRepository.getDecorFromDatabase();
     }

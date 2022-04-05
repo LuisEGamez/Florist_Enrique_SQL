@@ -2,6 +2,7 @@ package repositories;
 
 
 import entities.Decor;
+import entities.Flower;
 import entities.Product;
 import vista.View;
 
@@ -30,7 +31,7 @@ public class DecorRepository {
         ResultSet rs;
 
         try {
-            miQuery = connection.prepareStatement("SELECT * FROM decoration WHERE name = ? AND material = ?");
+            miQuery = connection.prepareStatement("SELECT * FROM decorations WHERE name = ? AND material = ?");
             miQuery.setString(1, decor.getName());
             miQuery.setString(2, decor.getMaterial());
             rs = miQuery.executeQuery();
@@ -40,7 +41,7 @@ public class DecorRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al comprobar la existencia de tree");
+            View.showMessage("Error al comprobar la existencia de decorations");
             e.printStackTrace();
         }
 
@@ -52,7 +53,7 @@ public class DecorRepository {
 
         PreparedStatement miQuery;
 
-        miQuery = connection.prepareStatement("INSERT INTO decoration (name, material, price, quantity) VALUES ( ? , ?, ?, ?)");
+        miQuery = connection.prepareStatement("INSERT INTO decorations (name, material, price, quantity) VALUES ( ? , ?, ?, ?)");
         miQuery.setString(1, decor.getName());
         miQuery.setString(2, decor.getMaterial());
         miQuery.setDouble(3, decor.getPrice());
@@ -65,7 +66,7 @@ public class DecorRepository {
 
         PreparedStatement miQuery;
 
-        miQuery = connection.prepareStatement("UPDATE decoration SET quantity = quantity + ?  WHERE name = ? AND material = ? ");
+        miQuery = connection.prepareStatement("UPDATE decorations SET quantity = quantity + ?  WHERE name = ? AND material = ? ");
         miQuery.setDouble(1, decor.getQuantity());
         miQuery.setString(2, decor.getName());
         miQuery.setString(3, decor.getMaterial());
@@ -77,12 +78,27 @@ public class DecorRepository {
 
         PreparedStatement miQuery;
 
-        miQuery = connection.prepareStatement("UPDATE decoration SET quantity = quantity - ?  WHERE name = ? AND material = ? ");
+        miQuery = connection.prepareStatement("UPDATE decorations SET quantity = quantity - ?  WHERE name = ? AND material = ? ");
         miQuery.setDouble(1, decor.getQuantity());
         miQuery.setString(2, decor.getName());
         miQuery.setString(3, decor.getMaterial());
 
         return miQuery;
+    }
+
+    public int getQuantityTypeOfDecor(Decor decor) throws SQLException {
+        int quantity = 0;
+        ResultSet rs;
+        PreparedStatement miQuery;
+
+        miQuery = connection.prepareStatement("SELECT quantity FROM decorations WHERE name = ? And material = ?");
+        miQuery.setString(1, decor.getName());
+        miQuery.setString(2, decor.getMaterial());
+        rs = miQuery.executeQuery();
+        if(rs.next()) {
+            quantity = rs.getInt("quantity");
+        }
+        return quantity;
     }
 
     public boolean addDecor(Decor decor){
@@ -119,13 +135,8 @@ public class DecorRepository {
 
         if(exists(decor)){
             try {
-                miQuery = connection.prepareStatement("SELECT quantity FROM decoration WHERE name = ? And material = ?");
-                miQuery.setString(1,decor.getName());
-                miQuery.setString(2, decor.getMaterial());
-                rs = miQuery.executeQuery();
-                if(rs.next()) {
-                    quantity = rs.getInt("quantity");
-                }
+
+                quantity = getQuantityTypeOfDecor(decor);
 
                 if( quantity >= decor.getQuantity() ){
                     miQuery = decreaseQuantityDecor(decor);
@@ -143,46 +154,30 @@ public class DecorRepository {
         return removed;
     }
 
-    public Product findOne (String name){
-        Decor decor = null;
+    public Decor findOneDecor(Decor decor){
         PreparedStatement query;
         ResultSet rs;
 
         try {
 
-            query = connection.prepareStatement("SELECT * FROM decoration WHERE name = ? LIMIT 1");
-            query.setString(1, name);
+            query = connection.prepareStatement("SELECT * FROM decorations WHERE name = ? AND material = ?");
+            query.setString(1, decor.getName());
+            query.setString(2, decor.getMaterial());
             rs = query.executeQuery();
             while (rs.next()){
-                decor = new Decor();
+                decor.setId(rs.getInt("id_decoration"));
                 decor.setName(rs.getString("name"));
-                decor.setPrice(rs.getDouble("price"));
                 decor.setTypeOfMaterial(rs.getString("material"));
-
+                decor.setPrice(rs.getDouble("price"));
+                decor.setQuantity(rs.getInt("quantity"));
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al buscar un decoration");
+            View.showMessage("Error al buscar un tree");
             e.printStackTrace();
         }
 
         return decor;
-    }
-
-    public ResultSet getDecorStockQuantity(){
-        Statement query;
-        ResultSet resultSet = null;
-        try {
-            query = connection.createStatement();
-            resultSet = query.executeQuery("SELECT COUNT(*) FROM decoration");
-
-
-        } catch (SQLException e) {
-            View.showMessage("Error al contar tabla decoration");
-            e.printStackTrace();
-        }
-
-        return resultSet;
     }
 
     public List<Product> getDecorFromDatabase(){
@@ -193,7 +188,7 @@ public class DecorRepository {
         try {
 
             statement= connection.createStatement();
-            rs = statement.executeQuery("SELECT * FROM decoration");
+            rs = statement.executeQuery("SELECT * FROM decorations");
 
             while (rs.next()) {
                 decor = new Decor();
@@ -210,22 +205,5 @@ public class DecorRepository {
         }
 
         return decors;
-    }
-
-    public ResultSet getTotalPrice(){
-
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-
-            statement= connection.createStatement();
-            resultSet = statement.executeQuery("SELECT SUM(price) AS \"Total\" FROM tree");
-
-        } catch (SQLException e) {
-            View.showMessage("Error al realizar la suma del precio en flower");
-            e.printStackTrace();
-        }
-
-        return resultSet;
     }
 }

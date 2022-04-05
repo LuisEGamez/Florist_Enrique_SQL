@@ -1,11 +1,11 @@
 package services;
 
-import entities.Product;
 import entities.Ticket;
 import repositories.DecorRepository;
 import repositories.FlowerRepository;
 import repositories.TicketRepository;
 import repositories.TreeRepository;
+import vista.View;
 
 public class TicketService {
 
@@ -22,37 +22,23 @@ public class TicketService {
         this.decorRepository = decorRepository;
     }
 
-    public boolean addProduct(Ticket ticket, String name) {
+    public void setTotalValueTicket(Ticket ticket){
+        double total;
+        total = ticketRepository.getTotalValueTreesByTicket(ticket) +
+                    ticketRepository.getTotalValueFlowersByTicket(ticket) +
+                        ticketRepository.getTotalValueDecorsByTicket(ticket);
 
-        boolean result = false;
-        Product tree = treeRepository.findOne(name);
-        Product flower = flowerRepository.findOne(name);
-        Product decor = decorRepository.findOne(name);
-        if(tree!= null){
-            ticket.getProducts().add(tree);
-            result = true;
-        }else if(flower!=null){
-            ticket.getProducts().add(flower);
-            result = true;
-        }else if(decor != null){
-            ticket.getProducts().add(decor);
-            result = true;
-        }
-
-        return result;
-
+        ticketRepository.setTotalValueTicket(ticket, total);
     }
 
-    public void total(Ticket ticket) {
+    public void getOldTickets(String date1, String date2){
 
-        double totalPriceTicket = 0;
+        for(Ticket ticket: ticketRepository.getOldTickets(date1,date2)){
 
-        for (Product product : ticket.getProducts()) {
-
-            totalPriceTicket += product.getPrice();
+            View.showInfoTickets(ticket, ticketRepository.getListTreesByTicket(ticket),
+                                            ticketRepository.getListFlowersByTicket(ticket),
+                                                ticketRepository.getListDecorsByTicket(ticket));
         }
-
-        ticket.setTotal(totalPriceTicket);
     }
 
     /*public double getTotalSales(){

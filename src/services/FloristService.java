@@ -5,10 +5,6 @@ import repositories.DecorRepository;
 import repositories.FlowerRepository;
 import repositories.TicketRepository;
 import repositories.TreeRepository;
-import vista.View;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 public class FloristService {
@@ -28,52 +24,6 @@ public class FloristService {
         this.ticketRepository = ticketRepository;
     }
 
-    public ResultSet quantityTreesStock(){
-
-        return treeRepository.getTreeStockQuantity();
-
-    }
-
-    public ResultSet quantityFlowersStock(){
-
-        return flowerRepository.getFlowerStockQuantity();
-
-    }
-
-    public ResultSet quantityDecorsStock(){
-
-        return decorRepository.getDecorStockQuantity();
-
-    }
-
-    public double getTotalValue(){
-        double result = 0;
-        try {
-            ResultSet rsTree = treeRepository.getTotalPrice();
-            ResultSet rsFlower = flowerRepository.getTotalPrice();
-            ResultSet rsDecor = decorRepository.getTotalPrice();
-
-            if (rsTree.next()){
-                result += rsTree.getDouble("Total");
-            }
-
-            if (rsFlower.next()){
-                result += rsFlower.getDouble("Total");
-            }
-
-            if (rsDecor.next()){
-                result += rsDecor.getDouble("Total");
-            }
-
-        }catch (SQLException e){
-            View.showMessage("Error al calcular el precio total");
-            e.printStackTrace();
-        }
-
-        return result;
-
-    }
-
     public List<Product> getTrees(){
 
         return treeRepository.getTreesFromDatabase();
@@ -87,6 +37,46 @@ public class FloristService {
     public List<Product> getDecorations(){
 
         return  decorRepository.getDecorFromDatabase();
+    }
+
+    public double getTotalValue(){
+        return getTotalValueTrees()+getTotalValueFlowers()+getTotalValueDecor();
+    }
+
+    public double getTotalValueTrees(){
+
+        double result = 0;
+
+        for (Product product: getTrees()){
+
+            result += product.getPrice()* product.getQuantity();
+
+        }
+        return result;
+    }
+
+    public double getTotalValueFlowers(){
+
+        double result = 0;
+
+        for (Product product: getFlowers()){
+
+            result += product.getPrice()* product.getQuantity();
+
+        }
+        return result;
+    }
+
+    public double getTotalValueDecor(){
+
+        double result = 0;
+
+        for (Product product: getDecorations()){
+
+            result += product.getPrice()* product.getQuantity();
+
+        }
+        return result;
     }
 
 

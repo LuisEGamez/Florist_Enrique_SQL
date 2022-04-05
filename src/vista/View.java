@@ -1,15 +1,13 @@
 package vista;
 
 import entities.*;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 
 public class View {
 
     public static void showStock(List<Product> trees, List<Product> flowers, List<Product> decors ) {
+
 
             showMessage("TREES:");
 
@@ -31,65 +29,33 @@ public class View {
 
     }
 
-    public static void showStockByProduct(ResultSet resultSetTrees, ResultSet resultSetFlowers, ResultSet resultSetDecor) {
+    public static void showInfoTickets(Ticket ticket, List<Product> trees, List<Product> flowers, List<Product> decors ) {
 
-        try {
-            while (resultSetTrees.next()){
-                showMessage("TREES: " + resultSetTrees.getString(1));
-            }
+        showMessage(ticket.toString());
 
-            while (resultSetFlowers.next()){
-                showMessage("FLOWERS: " + resultSetFlowers.getString(1));
-            }
+        showMessage("TREES:");
 
-            while (resultSetDecor.next()){
-                showMessage("DECORATION: " + resultSetDecor.getString(1));
-            }
+        trees.forEach(x -> showMessage(x.showInfo()));
 
-        }catch (SQLException e){
-            showMessage("Error al mostrar resultado cuenta");
-            e.printStackTrace();
-        }
+        showMessage("-----------------\n");
+
+        showMessage("FLOWERS:");
+
+        flowers.forEach(x -> showMessage(x.showInfo()));
+
+        showMessage("-----------------\n");
+
+        showMessage("DECORATIONS:");
+
+        decors.forEach(x -> showMessage(x.showInfo()));
+
+        showMessage("-----------------\n");
 
     }
 
     public static void showTotalValueFlorist(double totalValue) {
 
         System.out.println("TOTAL VALUE: " + totalValue + "€");
-
-    }
-
-
-    public static void showInfoTicket(Ticket ticket) {
-
-        System.out.println("TICKET NUMBER: " + ticket.getNumTicket() +
-                            "\nDATE: " + ticket.getDate());
-
-        for (Product product : ticket.getProducts()) {
-
-            if (product instanceof Tree) {
-
-                Tree tree = (Tree) product;
-                System.out.println(tree.showInfo());
-
-            } else if (product instanceof Flower) {
-
-                Flower flower = (Flower) product;
-                System.out.println(flower.showInfo());
-
-            } else if (product instanceof Decor) {
-
-                Decor decor = (Decor) product;
-                System.out.println(decor.showInfo());
-            }
-        }
-
-        System.out.println("TICKET TOTAL: " + ((double) Math.round(ticket.getTotal() * 100d) / 100d) + "€");
-    }
-
-    public static void showOldTickets(List<Ticket> oldTickets) {
-
-        oldTickets.forEach(x -> showInfoTicket(x));
 
     }
 
@@ -107,8 +73,8 @@ public class View {
 
     }
 
-    public static void options() {
-        System.out.println("SELECT OPTION 0 - 12:");
+    public static void showOptions() {
+        System.out.println("SELECT OPTION 0 - 11:");
         System.out.println("""
                 1-ADD TREE.
                 2-ADD FLOWER.
@@ -117,11 +83,19 @@ public class View {
                 5-REMOVE TREE.
                 6-REMOVE FLOWER.
                 7-REMOVE DECOR.
-                8-SHOW STOCK QUANTITY
-                9-TOTAL VALUE
-                10-CREATE TICKET
-                11-SHOW OLD TICKETS
-                12-SHOW TOTAL MONEY
+                8-TOTAL VALUE
+                9-CREATE TICKET
+                10-SHOW OLD TICKETS
+                11-SHOW TOTAL MONEY
+                0-EXIT.""");
+    }
+
+    public static void showProducts() {
+        System.out.println("SELECT PRODUCT 0 - 3:");
+        System.out.println("""
+                1-TREE.
+                2-FLOWER.
+                3-DECOR.
                 0-EXIT.""");
     }
 

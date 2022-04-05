@@ -7,6 +7,11 @@ public class Tree extends Product {
     public Tree() {
     }
 
+    public Tree(String name, double height) {
+        super(name);
+        this.height = height;
+    }
+
     public Tree(String name, double height, int quantity) {
         super(name, quantity);
         this.height = height;

@@ -2,6 +2,7 @@ package repositories;
 
 import entities.Flower;
 import entities.Product;
+import entities.Tree;
 import vista.View;
 
 import java.sql.*;
@@ -20,6 +21,10 @@ public class FlowerRepository {
         return new Flower(name, color, price, quantity);
     }
 
+    public Flower createFlower(String name, String color){
+        return new Flower(name, color);
+    }
+
     public Flower createFlower(String name, String color, int quantity){
         return new Flower(name, color, quantity);
     }
@@ -31,7 +36,7 @@ public class FlowerRepository {
         ResultSet rs;
 
         try {
-            miQuery = connection.prepareStatement("SELECT * FROM flower WHERE name = ? AND color = ?");
+            miQuery = connection.prepareStatement("SELECT * FROM flowers WHERE name = ? AND color = ?");
             miQuery.setString(1, flower.getName());
             miQuery.setString(2, flower.getcolor());
             rs = miQuery.executeQuery();
@@ -41,7 +46,7 @@ public class FlowerRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al comprobar la existencia de flower");
+            View.showMessage("Error al comprobar la existencia de flowers");
             e.printStackTrace();
         }
 
@@ -53,7 +58,7 @@ public class FlowerRepository {
 
         PreparedStatement miQuery;
 
-        miQuery = connection.prepareStatement("INSERT INTO flower (name, color, price, quantity) VALUES ( ? , ?, ?, ?)");
+        miQuery = connection.prepareStatement("INSERT INTO flowers (name, color, price, quantity) VALUES ( ? , ?, ?, ?)");
         miQuery.setString(1, flower.getName());
         miQuery.setString(2, flower.getcolor());
         miQuery.setDouble(3, flower.getPrice());
@@ -66,7 +71,7 @@ public class FlowerRepository {
 
         PreparedStatement miQuery;
 
-        miQuery = connection.prepareStatement("UPDATE flower SET quantity = quantity + ?  WHERE name = ? AND color = ?");
+        miQuery = connection.prepareStatement("UPDATE flowers SET quantity = quantity + ?  WHERE name = ? AND color = ?");
         miQuery.setDouble(1, flower.getQuantity());
         miQuery.setString(2, flower.getName());
         miQuery.setString(3, flower.getcolor());
@@ -78,12 +83,27 @@ public class FlowerRepository {
 
         PreparedStatement miQuery;
 
-        miQuery = connection.prepareStatement("UPDATE flower SET quantity = quantity - ?  WHERE name = ? AND color = ?");
+        miQuery = connection.prepareStatement("UPDATE flowers SET quantity = quantity - ?  WHERE name = ? AND color = ?");
         miQuery.setDouble(1, flower.getQuantity());
         miQuery.setString(2, flower.getName());
         miQuery.setString(3, flower.getcolor());
 
         return miQuery;
+    }
+
+    public int getQuantityTypeOfFlower(Flower flower) throws SQLException {
+        int quantity = 0;
+        ResultSet rs;
+        PreparedStatement miQuery;
+
+        miQuery = connection.prepareStatement("SELECT quantity FROM flowers WHERE name = ? And color = ?");
+        miQuery.setString(1, flower.getName());
+        miQuery.setString(2, flower.getcolor());
+        rs = miQuery.executeQuery();
+        if(rs.next()) {
+            quantity = rs.getInt("quantity");
+        }
+        return quantity;
     }
 
     public boolean addFlower(Flower flower){
@@ -104,7 +124,7 @@ public class FlowerRepository {
             added = true;
 
         } catch (SQLException e) {
-            View.showMessage("Error al añadir tree");
+            View.showMessage("Error al añadir flower");
             e.printStackTrace();
         }
 
@@ -114,19 +134,13 @@ public class FlowerRepository {
     public boolean removeFlower(Flower flower){
 
         boolean removed = false;
-        int quantity = 0;
-        ResultSet rs;
+        int quantity;
         PreparedStatement miQuery;
 
         if(exists(flower)){
             try {
-                miQuery = connection.prepareStatement("SELECT quantity FROM flower WHERE name = ? And color = ?");
-                miQuery.setString(1,flower.getName());
-                miQuery.setString(2, flower.getcolor());
-                rs = miQuery.executeQuery();
-                if(rs.next()) {
-                    quantity = rs.getInt("quantity");
-                }
+
+                quantity = getQuantityTypeOfFlower(flower);
 
                 if( quantity >= flower.getQuantity() ){
                     miQuery = decreaseQuantityFlower(flower);
@@ -136,7 +150,7 @@ public class FlowerRepository {
                     View.showMessage("La cantidad introducida supera el stock actual");
                 }
             } catch (SQLException e) {
-                View.showMessage("Error al eliminar cantidad tree");
+                View.showMessage("Error al eliminar cantidad flower");
                 e.printStackTrace();
             }
         }
@@ -144,48 +158,30 @@ public class FlowerRepository {
         return removed;
     }
 
-    public Product findOne (String name){
-
-        Flower flower = null;
+    public Flower findOneFlower(Flower flower){
         PreparedStatement query;
         ResultSet rs;
 
         try {
 
-            query = connection.prepareStatement("SELECT * FROM flower WHERE name = ? LIMIT 1");
-            query.setString(1, name);
+            query = connection.prepareStatement("SELECT * FROM flowers WHERE name = ? AND color = ?");
+            query.setString(1, flower.getName());
+            query.setString(2, flower.getcolor());
             rs = query.executeQuery();
-
             while (rs.next()){
-                flower = new Flower();
+                flower.setId(rs.getInt("id_flower"));
                 flower.setName(rs.getString("name"));
-                flower.setPrice(rs.getDouble("price"));
                 flower.setColor(rs.getString("color"));
-
+                flower.setPrice(rs.getDouble("price"));
+                flower.setQuantity(rs.getInt("quantity"));
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al buscar un flower");
+            View.showMessage("Error al buscar un tree");
             e.printStackTrace();
         }
 
         return flower;
-    }
-
-    public ResultSet getFlowerStockQuantity(){
-        Statement query;
-        ResultSet resultSet = null;
-        try {
-            query = connection.createStatement();
-            resultSet = query.executeQuery("SELECT COUNT(*) FROM flower");
-
-
-        } catch (SQLException e) {
-            View.showMessage("Error al contar tabla flores");
-            e.printStackTrace();
-        }
-
-        return resultSet;
     }
 
     public List<Product> getFlowersFromDatabase(){
@@ -196,7 +192,7 @@ public class FlowerRepository {
         try {
 
             statement= connection.createStatement();
-            rs = statement.executeQuery("SELECT * FROM flower");
+            rs = statement.executeQuery("SELECT * FROM flowers");
 
             while (rs.next()) {
                 flower = new Flower();
@@ -208,28 +204,11 @@ public class FlowerRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al realizar la búsqueda en flower");
+            View.showMessage("Error al realizar la búsqueda en flowers");
             e.printStackTrace();
         }
 
         return flowers;
-    }
-
-    public ResultSet getTotalPrice(){
-
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-
-            statement= connection.createStatement();
-            resultSet = statement.executeQuery("SELECT SUM(price) AS \"Total\" FROM tree");
-
-        } catch (SQLException e) {
-            View.showMessage("Error al realizar la suma del precio en flower");
-            e.printStackTrace();
-        }
-
-        return resultSet;
     }
 
 }

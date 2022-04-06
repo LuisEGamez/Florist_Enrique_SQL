@@ -117,6 +117,12 @@ public class App {
                         View.showTotalValueFlorist(floristService.getTotalValue());
                         break;
 
+                        /*
+                        *
+                        * Creamos un objeto Ticket en el que iremos añadiendo productos de nuestra base de datos. Una vez que el producto esta
+                        * añadido al ticket se elimina de nuestra base de datos
+                        *
+                         */
                     case 9:
                         ticketRepository.addTicket();
                         ticket = ticketRepository.createTicket();
@@ -125,6 +131,9 @@ public class App {
                             View.showProducts();
                             choice2 = Keyboard.readInt("");
                             switch (choice2){
+
+                                // Añadimos un árbol a la tabla que relaciona ticket y árboles
+
                                 case 1:
                                     tree = treeRepository.createTree(Keyboard.readString("ENTER NAME"),Keyboard.readDouble("ENTER HEIGHT"));
                                     tree = treeRepository.findOneTree(tree);
@@ -139,6 +148,9 @@ public class App {
                                         treeRepository.removeTree(tree);
                                     }
                                     break;
+
+                                // Añadimos una flor a la tabla que relaciona ticket y flores
+
                                 case 2:
                                     flower = flowerRepository.createFlower(Keyboard.readString("ENTER NAME"),Keyboard.readString("ENTER COLOR"));
                                     flower = flowerRepository.findOneFlower(flower);
@@ -153,6 +165,9 @@ public class App {
                                         flowerRepository.removeFlower(flower);
                                     }
                                     break;
+
+                                // Añadimos una decor a la tabla que relaciona ticket y decor
+
                                 case 3:
                                     decor = decorRepository.createDecor(Keyboard.readString("ENTER NAME."));
                                     boolean select2;

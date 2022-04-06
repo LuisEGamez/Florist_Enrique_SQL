@@ -91,6 +91,13 @@ public class FloristService {
         ticketRepository.setTotalValueTicket(ticket, total);
     }
 
+    /*
+    *
+    * Este método recorre toda la lista de tickets antiguos y nos devuelve un tique con una
+    * lista de todos los productos que tiene cada ticket seleccionado.
+    *
+     */
+
     public Ticket getOldTickets(String date1, String date2){
 
         Ticket result = null;
@@ -102,6 +109,13 @@ public class FloristService {
 
         return result;
     }
+
+    /*
+    *
+    * Tomamos las listas de producto que nos devuelven las consultas y las añadimos a una
+    * lista conjunta de productos que añadimos a cada ticket.
+    *
+     */
 
     public Ticket setProductsOnTicket(Ticket ticket){
 

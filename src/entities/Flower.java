@@ -12,16 +12,6 @@ public class Flower extends Product {
         this.color = color;
     }
 
-    public Flower(String name, String color, int quantity) {
-        super(name, quantity);
-        this.color = color;
-    }
-
-    public Flower(String name, String color, double price, int quantity){
-        super(name, price, quantity);
-        this.color = color;
-    }
-
     public String getColor() {
         return this.color;
     }
@@ -32,11 +22,11 @@ public class Flower extends Product {
 
     @Override
     public String showInfoWithOutQuantity() {
-        return "->PRODUCT: " + super.getName() + "  ->COLOR: " + this.color + "  ->PRICE: " + super.getPrice() + "€";
+        return "->PRODUCT: " + super.getName() + "  COLOR: " + this.color + "  PRICE: " + super.getPrice() + "€";
     }
 
     @Override
     public String showInfoWithQuantity() {
-        return "->PRODUCT: " + super.getName() + "  ->COLOR: " + this.color + "  ->PRICE: " + super.getPrice() + "€  ->QUANTITY: " + super.getQuantity() + " Uds";
+        return "->PRODUCT: " + super.getName() + "  COLOR: " + this.color + "  PRICE: " + super.getPrice() + "€  QUANTITY: " + super.getQuantity() + " Uds";
     }
 }

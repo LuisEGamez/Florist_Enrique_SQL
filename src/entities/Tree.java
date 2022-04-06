@@ -21,32 +21,6 @@ public class Tree extends Product {
 
     }
 
-    public Tree(String name, double height, int quantity) {
-        super(name, quantity);
-        if(height <= 0.5){
-            this.height = 0.5;
-        }else if(height > 0.5 && height <= 1){
-            this.height = 1;
-        }else if(height > 1 && height <= 1.5){
-            this.height = 1.5;
-        }else {
-            this.height = 2;
-        }
-    }
-
-    public Tree(String name, double height, double price, int quantity){
-        super(name, price, quantity);
-        if(height <= 0.5){
-            this.height = 0.5;
-        }else if(height > 0.5 && height <= 1){
-            this.height = 1;
-        }else if(height > 1 && height <= 1.5){
-            this.height = 1.5;
-        }else {
-            this.height = 2;
-        }
-    }
-
     public double getHeight() {
         return this.height;
     }
@@ -57,11 +31,11 @@ public class Tree extends Product {
 
     @Override
     public String showInfoWithOutQuantity() {
-        return "->PRODUCT: " + super.getName() + "  ->HEIGHT: " + this.height + "mts  ->PRICE: " + super.getPrice() + "€";
+        return "->PRODUCT: " + super.getName() + "  HEIGHT: " + this.height + "mts  PRICE: " + super.getPrice() + "€";
     }
 
     @Override
     public String showInfoWithQuantity() {
-        return "->PRODUCT: " + super.getName() + "  ->HEIGHT: " + this.height + "mts  ->PRICE: " + super.getPrice() + "€  ->QUANTITY: " + super.getQuantity() + " Uds";
+        return "->PRODUCT: " + super.getName() + "  HEIGHT: " + this.height + "mts  PRICE: " + super.getPrice() + "€  QUANTITY: " + super.getQuantity() + " Uds";
     }
 }

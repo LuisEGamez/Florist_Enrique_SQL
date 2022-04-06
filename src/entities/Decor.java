@@ -12,16 +12,6 @@ public class Decor extends Product {
         typeOfMaterial = "";
     }
 
-    public Decor(String name, String typeOfMaterial, int quantity) {
-        super(name, quantity);
-        this.typeOfMaterial = typeOfMaterial;
-    }
-
-    public Decor(String name, double price, int quantity){
-        super(name, price, quantity);
-        typeOfMaterial = "";
-    }
-
     public String getMaterial() {
         return this.typeOfMaterial;
     }
@@ -44,12 +34,12 @@ public class Decor extends Product {
 
     @Override
     public String showInfoWithOutQuantity() {
-        return "->PRODUCT: " + super.getName() + "  ->MATERIAL: " + this.typeOfMaterial + "  ->PRICE: " + super.getPrice() + "€";
+        return "->PRODUCT: " + super.getName() + "  MATERIAL: " + this.typeOfMaterial + "  PRICE: " + super.getPrice() + "€";
     }
 
     @Override
     public String showInfoWithQuantity() {
-        return "->PRODUCT: " + super.getName() + "  ->MATERIAL: " + this.typeOfMaterial + "  ->PRICE: " + super.getPrice() + "€  ->QUANTITY: " + super.getQuantity() + " Uds";
+        return "->PRODUCT: " + super.getName() + "  MATERIAL: " + this.typeOfMaterial + "  PRICE: " + super.getPrice() + "€  QUANTITY: " + super.getQuantity() + " Uds";
     }
 
 }

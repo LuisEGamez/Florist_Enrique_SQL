@@ -46,10 +46,6 @@ public class Ticket{
         this.date = date;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
     public String toString(){
         return "Nº TICKET: " + numTicket +
                 "\nDATE: " + date +

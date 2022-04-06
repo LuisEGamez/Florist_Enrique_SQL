@@ -3,7 +3,6 @@ package repositories;
 import entities.Flower;
 import entities.Product;
 import vista.View;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,16 +15,8 @@ public class FlowerRepository {
         connection = DriverManager.getConnection("jdbc:mysql://localhost:3307/Florist_Enrique_SQL","root", "");
     }
 
-    public Flower createFlower(String name, String color, double price, int quantity){
-        return new Flower(name, color, price, quantity);
-    }
-
     public Flower createFlower(String name, String color){
         return new Flower(name, color);
-    }
-
-    public Flower createFlower(String name, String color, int quantity){
-        return new Flower(name, color, quantity);
     }
 
     public boolean exists (Flower flower){
@@ -45,7 +36,7 @@ public class FlowerRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al comprobar la existencia de flowers");
+            View.showMessage("ERROR WHEN CHECKING IF EXISTS FLOWER DB");
             e.printStackTrace();
         }
 
@@ -123,7 +114,7 @@ public class FlowerRepository {
             added = true;
 
         } catch (SQLException e) {
-            View.showMessage("Error al añadir flower");
+            View.showMessage("ERROR WHEN ADDING FLOWER DB");
             e.printStackTrace();
         }
 
@@ -146,7 +137,7 @@ public class FlowerRepository {
                     removed = true;
                 }
             } catch (SQLException e) {
-                View.showMessage("Error al eliminar cantidad flower");
+                View.showMessage("ERROR WHEN REMOVING FLOWER DB");
                 e.printStackTrace();
             }
 
@@ -172,7 +163,7 @@ public class FlowerRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al buscar un tree");
+            View.showMessage("ERROR WHEN FINDING FLOWER DB");
             e.printStackTrace();
         }
 
@@ -199,7 +190,7 @@ public class FlowerRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al realizar la búsqueda en flowers");
+            View.showMessage("ERROR WHEN FINDING FLOWER DB");
             e.printStackTrace();
         }
 

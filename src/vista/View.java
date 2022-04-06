@@ -123,14 +123,6 @@ public class View {
         }
     }
 
-    public static void ticketAdded ( boolean result){
-        if (result) {
-            System.out.println("TICKET SUCCESSFULLY ADDED.");
-        } else {
-            System.out.println("TICKET NOT FOUND.");
-        }
-    }
-
     public static void showMessage (String message){
         System.out.println(message);
     }

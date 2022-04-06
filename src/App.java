@@ -8,7 +8,7 @@ import tools.Keyboard;
 import vista.View;
 
 import java.sql.SQLException;
-
+import java.util.List;
 
 
 public class App {
@@ -18,6 +18,7 @@ public class App {
         Flower flower;
         Decor decor;
         Ticket ticket;
+        List<Ticket> tickets;
         int choice, choice2;
         boolean selectMaterial;
         boolean productAddedToTicket = false;
@@ -34,7 +35,7 @@ public class App {
 
         } catch (SQLException e) {
 
-            View.showMessage("Error al realizar la conexión con la base de datos");
+            View.showMessage("ERROR WHILE CONNECTING TO THE DB");
             e.printStackTrace();
 
         }
@@ -217,10 +218,23 @@ public class App {
                         }
                         break;
 
+                    /*
+                     *
+                     * Esta opción nos devuelve una lista de todos los tickets entre las fechas señaladas,
+                     * Recorre toda la lista de tickets antiguos y nos va devolviendo un ticket con la
+                     * lista total de los productos que tiene cada ticket seleccionado.
+                     *
+                     * En cada vuelta de bucle mostramos toda la información de cada ticket.
+                     *
+                     */
                     case 10:
 
-                        View.showInfoTickets(floristService.getOldTickets(Keyboard.readString("DATE 1: YYYY-MM-DD"), Keyboard.readString("DATE 2: YYYY-MM-DD")));
+                        tickets = ticketRepository.getOldTickets(Keyboard.readString("DATE 1: YYYY-MM-DD"), Keyboard.readString("DATE 2: YYYY-MM-DD"));
 
+                        for(Ticket tck: tickets){
+
+                            View.showInfoTickets(floristService.setProductsOnTicket(tck));
+                        }
 
                         break;
 

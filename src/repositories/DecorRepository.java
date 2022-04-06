@@ -2,10 +2,8 @@ package repositories;
 
 
 import entities.Decor;
-import entities.Flower;
 import entities.Product;
 import vista.View;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +39,7 @@ public class DecorRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al comprobar la existencia de decorations");
+            View.showMessage("ERROR WHEN CHECKING IF EXISTS DECORATION DB");
             e.printStackTrace();
         }
 
@@ -119,7 +117,7 @@ public class DecorRepository {
             added = true;
 
         } catch (SQLException e) {
-            View.showMessage("Error al añadir decoration");
+            View.showMessage("ERROR WHEN ADDING DECORATION DB");
             e.printStackTrace();
         }
 
@@ -142,7 +140,7 @@ public class DecorRepository {
                     removed = true;
                 }
             } catch (SQLException e) {
-                View.showMessage("Error al eliminar cantidad decoration");
+                View.showMessage("ERROR WHEN REMOVING DECORATION DB");
                 e.printStackTrace();
             }
 
@@ -168,7 +166,7 @@ public class DecorRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al buscar un tree");
+            View.showMessage("ERROR WHEN FINDING DECORATION DB");
             e.printStackTrace();
         }
 
@@ -195,7 +193,7 @@ public class DecorRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al realizar la búsqueda en flower");
+            View.showMessage("ERROR WHEN FINDING DECORATION");
             e.printStackTrace();
         }
 

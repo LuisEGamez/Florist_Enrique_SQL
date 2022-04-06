@@ -93,25 +93,6 @@ public class FloristService {
 
     /*
     *
-    * Este método recorre toda la lista de tickets antiguos y nos devuelve un tique con una
-    * lista de todos los productos que tiene cada ticket seleccionado.
-    *
-     */
-
-    public Ticket getOldTickets(String date1, String date2){
-
-        Ticket result = null;
-        List<Ticket> tickets = ticketRepository.getOldTickets(date1,date2);
-        for(Ticket ticket: tickets){
-
-            result = setProductsOnTicket(ticket);
-        }
-
-        return result;
-    }
-
-    /*
-    *
     * Tomamos las listas de producto que nos devuelven las consultas y las añadimos a una
     * lista conjunta de productos que añadimos a cada ticket.
     *

@@ -4,7 +4,6 @@ package repositories;
 import entities.Product;
 import entities.Tree;
 import vista.View;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,16 +17,8 @@ public class TreeRepository {
         connection = DriverManager.getConnection("jdbc:mysql://localhost:3307/Florist_Enrique_SQL","root", "");
     }
 
-    public Tree createTree(String name, double price, double height, int quantity){
-        return new Tree(name, price, height, quantity);
-    }
-
     public Tree createTree(String name, double height){
         return new Tree(name, height);
-    }
-
-    public Tree createTree(String name, double height, int quantity){
-        return new Tree(name, height, quantity);
     }
 
     public boolean exists (Tree tree){
@@ -47,7 +38,7 @@ public class TreeRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al comprobar la existencia de trees");
+            View.showMessage("ERROR WHEN CHECKING IF EXISTS TREE DB");
             e.printStackTrace();
         }
 
@@ -126,7 +117,7 @@ public class TreeRepository {
             added = true;
 
         } catch (SQLException e) {
-            View.showMessage("Error al añadir tree");
+            View.showMessage("ERROR WHEN ADDING TREE DB");
             e.printStackTrace();
         }
 
@@ -150,7 +141,7 @@ public class TreeRepository {
                     removed = true;
                 }
             } catch (SQLException e) {
-                View.showMessage("Error al eliminar cantidad trees");
+                View.showMessage("ERROR WHEN REMOVING TREE DB");
                 e.printStackTrace();
             }
 
@@ -176,7 +167,7 @@ public class TreeRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al buscar un tree");
+            View.showMessage("ERROR WHEN FINDING TREE DB");
             e.printStackTrace();
         }
 
@@ -203,7 +194,7 @@ public class TreeRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al realizar la búsqueda en trees");
+            View.showMessage("ERROR WHEN FINDING TREE DB");
             e.printStackTrace();
         }
 

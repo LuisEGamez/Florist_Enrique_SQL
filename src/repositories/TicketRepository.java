@@ -3,8 +3,6 @@ package repositories;
 
 import entities.*;
 import vista.View;
-
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +27,7 @@ public class TicketRepository {
             added = true;
 
         } catch (SQLException e) {
-            System.out.println("Error al insertar ticket");
+            System.out.println("ERROR WHEN INSERTING TICKET DB");
             e.printStackTrace();
         }
 
@@ -50,7 +48,7 @@ public class TicketRepository {
 
 
         } catch (SQLException e) {
-            System.out.println("Error al crear ticket");
+            System.out.println("ERROR WHEN FINDING TICKET DB");
             e.printStackTrace();
         }
 
@@ -68,7 +66,7 @@ public class TicketRepository {
             removed = true;
 
         } catch (SQLException e) {
-            System.out.println("Error al insertar ticket");
+            System.out.println("ERROR WHEN REMOVING TICKET DB");
             e.printStackTrace();
         }
 
@@ -90,7 +88,7 @@ public class TicketRepository {
                 insert = true;
 
             } catch (SQLException e) {
-                View.showMessage("Error al insertar tree en ticket");
+                View.showMessage("ERROR WHEN INSERTING TREE TO TICKET DB");
                 e.printStackTrace();
             }
         }
@@ -113,7 +111,7 @@ public class TicketRepository {
                 insert = true;
 
             } catch (SQLException e) {
-                View.showMessage("Error al insertar tree en ticket");
+                View.showMessage("ERROR WHEN INSERTING FLOWER TO TICKET DB");
                 e.printStackTrace();
             }
         }
@@ -136,7 +134,7 @@ public class TicketRepository {
                 insert = true;
 
             } catch (SQLException e) {
-                View.showMessage("Error al insertar tree en ticket");
+                View.showMessage("ERROR WHEN INSERTING DECORATION TO TICKET DB");
                 e.printStackTrace();
             }
         }
@@ -159,7 +157,7 @@ public class TicketRepository {
 
 
             } catch (SQLException e) {
-                View.showMessage("Error al sumar el total de trees del ticket");
+                View.showMessage("ERROR WHEN SUM TOTAL TREES DB");
                 e.printStackTrace();
             }
         return result;
@@ -181,7 +179,7 @@ public class TicketRepository {
 
 
         } catch (SQLException e) {
-            View.showMessage("Error al sumar el total de flowers del ticket");
+            View.showMessage("ERROR WHEN SUM TOTAL FLOWERS DB");
             e.printStackTrace();
         }
         return result;
@@ -202,7 +200,7 @@ public class TicketRepository {
 
 
         } catch (SQLException e) {
-            View.showMessage("Error al sumar el total de decorations del ticket");
+            View.showMessage("ERROR WHEN SUM TOTAL DECORATIONS DB");
             e.printStackTrace();
         }
         return result;
@@ -219,7 +217,7 @@ public class TicketRepository {
             miQuery.executeUpdate();
 
         } catch (SQLException e) {
-            View.showMessage("Error al actualizar el total del ticket");
+            View.showMessage("ERROR WHEN UPDATING TOTAL TICKET DB");
             e.printStackTrace();
         }
 
@@ -250,7 +248,7 @@ public class TicketRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al buscar un tree");
+            View.showMessage("ERROR WHEN FINDING TICKET DB");
             e.printStackTrace();
         }
 
@@ -281,7 +279,7 @@ public class TicketRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al buscar un tree");
+            View.showMessage("ERROR WHEN FINDING TREE DB");
             e.printStackTrace();
         }
 
@@ -313,7 +311,7 @@ public class TicketRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al buscar un tree");
+            View.showMessage("ERROR WHEN FINDING FLOWER DB");
             e.printStackTrace();
         }
 
@@ -345,7 +343,7 @@ public class TicketRepository {
             }
 
         } catch (SQLException e) {
-            View.showMessage("Error al buscar un tree");
+            View.showMessage("ERROR WHEN FINDING DECORATION DB");
             e.printStackTrace();
         }
 
@@ -368,7 +366,7 @@ public class TicketRepository {
 
 
         } catch (SQLException e) {
-            View.showMessage("Error al sumar el total de  ticket");
+            View.showMessage("ERROR WHEN SUM TOTAL TICKET DB");
             e.printStackTrace();
         }
         return result;

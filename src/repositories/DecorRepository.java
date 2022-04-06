@@ -129,11 +129,9 @@ public class DecorRepository {
     public boolean removeDecor(Decor decor){
 
         boolean removed = false;
-        int quantity = 0;
-        ResultSet rs;
+        int quantity;
         PreparedStatement miQuery;
 
-        if(exists(decor)){
             try {
 
                 quantity = getQuantityTypeOfDecor(decor);
@@ -142,14 +140,11 @@ public class DecorRepository {
                     miQuery = decreaseQuantityDecor(decor);
                     miQuery.executeUpdate();
                     removed = true;
-                }else {
-                    View.showMessage("La cantidad introducida supera el stock actual");
                 }
             } catch (SQLException e) {
                 View.showMessage("Error al eliminar cantidad decoration");
                 e.printStackTrace();
             }
-        }
 
         return removed;
     }

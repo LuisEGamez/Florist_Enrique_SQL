@@ -136,7 +136,6 @@ public class FlowerRepository {
         int quantity;
         PreparedStatement miQuery;
 
-        if(exists(flower)){
             try {
 
                 quantity = getQuantityTypeOfFlower(flower);
@@ -145,14 +144,11 @@ public class FlowerRepository {
                     miQuery = decreaseQuantityFlower(flower);
                     miQuery.executeUpdate();
                     removed = true;
-                }else {
-                    View.showMessage("La cantidad introducida supera el stock actual");
                 }
             } catch (SQLException e) {
                 View.showMessage("Error al eliminar cantidad flower");
                 e.printStackTrace();
             }
-        }
 
         return removed;
     }

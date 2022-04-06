@@ -137,10 +137,9 @@ public class TreeRepository {
     public boolean removeTree(Tree tree){
 
         boolean removed = false;
-        int quantity = 0;
+        int quantity;
         PreparedStatement miQuery;
 
-        if(exists(tree)){
             try {
 
                 quantity = getQuantityTypeOfTree(tree);
@@ -149,14 +148,11 @@ public class TreeRepository {
                     miQuery = decreaseQuantityTree(tree);
                     miQuery.executeUpdate();
                     removed = true;
-                }else {
-                    View.showMessage("La cantidad introducida supera el stock actual");
                 }
             } catch (SQLException e) {
                 View.showMessage("Error al eliminar cantidad trees");
                 e.printStackTrace();
             }
-        }
 
         return removed;
     }

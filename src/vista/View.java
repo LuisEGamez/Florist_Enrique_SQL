@@ -31,12 +31,18 @@ public class View {
 
     public static void showInfoTickets(Ticket ticket){
 
-        System.out.println("Nº TICKET: " + ticket.getNumTicket());
-        System.out.println("DATE: " + ticket.getDate());
+        if(ticket == null){
+            showMessage("WRONG DATE, INSERT CORRECT DATE");
+        }else{
 
-        ticket.getProducts().forEach(x -> System.out.println(x.showInfoWithOutQuantity()));
+            System.out.println("Nº TICKET: " + ticket.getNumTicket());
+            System.out.println("DATE: " + ticket.getDate());
 
-        System.out.println("TOTAL: " + ticket.getTotal());
+            ticket.getProducts().forEach(x -> System.out.println(x.showInfoWithOutQuantity()));
+
+            System.out.println("TOTAL: " + ticket.getTotal());
+        }
+
     }
 
     public static void showTotalValueFlorist(double totalValue) {
@@ -45,11 +51,11 @@ public class View {
 
     }
 
-    public static void showRemoveMessageConfirmation(boolean exist) { // Revisar
-        if (exist) {
+    public static void showProductRemoved(boolean removed) {
+        if (removed) {
             System.out.println("PRODUCT SUCCESSFULLY REMOVE.");
         } else {
-            System.out.println("PRODUCT NOT REMOVE.");
+            System.out.println("PRODUCT NOT REMOVE, WRONG QUANTITY INSUFFICIENT STOCK .");
         }
     }
 

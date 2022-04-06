@@ -235,7 +235,7 @@ public class TicketRepository {
 
         try {
 
-            query = connection.prepareStatement("SELECT * FROM tickets WHERE date  between ? and ?");
+            query = connection.prepareStatement("SELECT * FROM tickets WHERE date between ? and ?");
             query.setString(1, date1);
             query.setString(2, date2);
             rs = query.executeQuery();

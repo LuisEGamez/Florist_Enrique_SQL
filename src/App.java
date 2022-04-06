@@ -14,13 +14,13 @@ import java.sql.SQLException;
 public class App {
 
     public static void main(String[] args) {
-
-        Florist florist = new Florist("Margarita", "C/ Peru 254", "698574526");
         Tree tree;
         Flower flower;
         Decor decor;
         Ticket ticket;
         int choice, choice2;
+        boolean selectMaterial;
+        boolean productAddedToTicket = false;
         TreeRepository treeRepository = null;
         FlowerRepository flowerRepository = null;
         DecorRepository decorRepository = null;
@@ -57,27 +57,34 @@ public class App {
                         View.showMessage("SOFTWARE SUCCESSFULLY CLOSED");
                         break;
                     case 1:
-                        tree = treeRepository.createTree(Keyboard.readString("ENTER NAME."), Keyboard.readDouble("ENTER HEIGHT"),
-                                                            Keyboard.readDouble("ENTER PRICE"), Keyboard.readInt("ENTER QUANTITY"));
+                        tree = treeRepository.createTree(Keyboard.readString("ENTER NAME."), Keyboard.readDouble("ENTER HEIGHT"));
+                        if (!treeRepository.exists(tree)) {
+                            tree.setPrice(Keyboard.readDouble("ENTER PRICE"));
+                        }
+                        tree.setQuantity(Keyboard.readInt("ENTER QUANTITY"));
                         View.treeAdded(treeRepository.addTree(tree));
                         break;
                     case 2:
-                        flower = flowerRepository.createFlower(Keyboard.readString("ENTER NAME."), Keyboard.readString("ENTER COLOR."),
-                                                                Keyboard.readDouble("ENTER PRICE"), Keyboard.readInt("ENTER QUANTITY"));
-
+                        flower = flowerRepository.createFlower(Keyboard.readString("ENTER NAME."), Keyboard.readString("ENTER COLOR."));
+                        if (!flowerRepository.exists(flower)) {
+                            flower.setPrice(Keyboard.readDouble("ENTER PRICE"));
+                        }
+                        flower.setQuantity(Keyboard.readInt("ENTER QUANTITY"));
                         View.flowerAdded(flowerRepository.addFlower(flower));
                         break;
                     case 3:
                         decor = decorRepository.createDecor(Keyboard.readString("ENTER NAME."));
-                        boolean select;
+
                         do{
-                            select = decor.setTypeOfMaterial(Keyboard.readInt("""
+                            selectMaterial = decor.setTypeOfMaterial(Keyboard.readInt("""
                                                                         MATERIAL:\s
                                                                         1-WOOD
                                                                         2-PLASTIC"""));
-                            if(!select){View.showMessage("SELECT 1 OR 2");}
-                        }while (!select);
-                        decor.setPrice(Keyboard.readDouble("ENTER PRICE"));
+                            if(!selectMaterial){View.showMessage("SELECT 1 OR 2");}
+                        }while (!selectMaterial);
+                        if (!decorRepository.exists(decor)) {
+                            decor.setPrice(Keyboard.readDouble("ENTER PRICE"));
+                        }
                         decor.setQuantity(Keyboard.readInt("ENTER QUANTITY"));
                         View.decorAdded(decorRepository.addDecor(decor));
                         break;
@@ -88,29 +95,41 @@ public class App {
 
                     case 5:
 
-                        tree = treeRepository.createTree(Keyboard.readString("ENTER NAME"), Keyboard.readDouble("ENTER HEIGHT"), Keyboard.readInt("ENTER QUANTITY"));
-
-                        View.showRemoveMessageConfirmation(treeRepository.removeTree(tree));
+                        tree = treeRepository.createTree(Keyboard.readString("ENTER NAME"), Keyboard.readDouble("ENTER HEIGHT"));
+                        if(treeRepository.exists(tree)){
+                            tree.setQuantity(Keyboard.readInt("ENTER QUANTITY"));
+                            View.showProductRemoved(treeRepository.removeTree(tree));
+                        }else {
+                            View.showMessage("PRODUCT NOT FOUND");
+                        }
                         break;
 
                     case 6:
-                        flower = flowerRepository.createFlower(Keyboard.readString("ENTER NAME"), Keyboard.readString("ENTER COLOR"), Keyboard.readInt("ENTER QUANTITY"));
-
-                        View.showRemoveMessageConfirmation(flowerRepository.removeFlower(flower));
+                        flower = flowerRepository.createFlower(Keyboard.readString("ENTER NAME"), Keyboard.readString("ENTER COLOR"));
+                        if(flowerRepository.exists(flower)){
+                            flower.setQuantity(Keyboard.readInt("ENTER QUANTITY"));
+                            View.showProductRemoved(flowerRepository.removeFlower(flower));
+                        }else {
+                            View.showMessage("PRODUCT NOT FOUND");
+                        }
                         break;
 
                     case 7:
                         decor = decorRepository.createDecor(Keyboard.readString("ENTER NAME."));
-                        boolean select1;
+
                         do{
-                            select1 = decor.setTypeOfMaterial(Keyboard.readInt("""
+                            selectMaterial = decor.setTypeOfMaterial(Keyboard.readInt("""
                                                                         MATERIAL:\s
                                                                         1-WOOD
                                                                         2-PLASTIC"""));
-                            if(!select1){View.showMessage("SELECT 1 OR 2");}
-                        }while (!select1);
-                        decor.setQuantity(Keyboard.readInt("ENTER QUANTITY"));
-                        View.showRemoveMessageConfirmation(decorRepository.removeDecor(decor));
+                            if(!selectMaterial){View.showMessage("SELECT 1 OR 2");}
+                        }while (!selectMaterial);
+                        if(decorRepository.exists(decor)){
+                            decor.setQuantity(Keyboard.readInt("ENTER QUANTITY"));
+                            View.showProductRemoved(decorRepository.removeDecor(decor));
+                        }else {
+                            View.showMessage("PRODUCT NOT FOUND");
+                        }
                         break;
 
                     case 8:
@@ -126,7 +145,6 @@ public class App {
                     case 9:
                         ticketRepository.addTicket();
                         ticket = ticketRepository.createTicket();
-                        boolean productAdded = false;
                         do {
                             View.showProducts();
                             choice2 = Keyboard.readInt("");
@@ -138,12 +156,12 @@ public class App {
                                     tree = treeRepository.createTree(Keyboard.readString("ENTER NAME"),Keyboard.readDouble("ENTER HEIGHT"));
                                     tree = treeRepository.findOneTree(tree);
                                     if(tree.getId() == 0){
-                                        View.showMessage("Producto no encontrado");
+                                        View.showMessage("PRODUCT NOT FOUND");
                                     }else if (tree.getQuantity() < 1) {
-                                        View.showMessage("No hay stock del producto");
+                                        View.showMessage("INSUFFICIENT STOCK");
                                     }else {
-                                        productAdded = ticketRepository.insertTreeToTicket(ticket, tree);
-                                        View.productAdded(productAdded);
+                                        productAddedToTicket = ticketRepository.insertTreeToTicket(ticket, tree);
+                                        View.productAdded(productAddedToTicket);
                                         tree.setQuantity(1);
                                         treeRepository.removeTree(tree);
                                     }
@@ -155,12 +173,12 @@ public class App {
                                     flower = flowerRepository.createFlower(Keyboard.readString("ENTER NAME"),Keyboard.readString("ENTER COLOR"));
                                     flower = flowerRepository.findOneFlower(flower);
                                     if(flower.getId() == 0){
-                                        View.showMessage("Producto no encontrado");
+                                        View.showMessage("PRODUCT NOT FOUND");
                                     }else if (flower.getQuantity() < 1) {
-                                        View.showMessage("No hay stock del producto");
+                                        View.showMessage("INSUFFICIENT STOCK");
                                     }else {
-                                        productAdded = ticketRepository.insertFlowerToTicket(ticket, flower);
-                                        View.productAdded(productAdded);
+                                        productAddedToTicket = ticketRepository.insertFlowerToTicket(ticket, flower);
+                                        View.productAdded(productAddedToTicket);
                                         flower.setQuantity(1);
                                         flowerRepository.removeFlower(flower);
                                     }
@@ -170,22 +188,21 @@ public class App {
 
                                 case 3:
                                     decor = decorRepository.createDecor(Keyboard.readString("ENTER NAME."));
-                                    boolean select2;
                                     do{
-                                        select2 = decor.setTypeOfMaterial(Keyboard.readInt("""
+                                        selectMaterial = decor.setTypeOfMaterial(Keyboard.readInt("""
                                                                         MATERIAL:\s
                                                                         1-WOOD
                                                                         2-PLASTIC"""));
-                                        if(!select2){View.showMessage("SELECT 1 OR 2");}
-                                    }while (!select2);
+                                        if(!selectMaterial){View.showMessage("SELECT 1 OR 2");}
+                                    }while (!selectMaterial);
                                     decor = decorRepository.findOneDecor(decor);
                                     if(decor.getId() == 0){
-                                        View.showMessage("Producto no encontrado");
+                                        View.showMessage("PRODUCT NOT FOUND");
                                     }else if (decor.getQuantity() < 1) {
-                                        View.showMessage("No hay stock del producto");
+                                        View.showMessage("INSUFFICIENT STOCK");
                                     }else {
-                                        productAdded = ticketRepository.insertDecorToTicket(ticket, decor);
-                                        View.productAdded(productAdded);
+                                        productAddedToTicket = ticketRepository.insertDecorToTicket(ticket, decor);
+                                        View.productAdded(productAddedToTicket);
                                         decor.setQuantity(1);
                                         decorRepository.removeDecor(decor);
                                     }
@@ -194,15 +211,16 @@ public class App {
                             }
                         }while (choice2 != 0);
                         floristService.setTotalValueTicket(ticket);
-                        if(!productAdded){
+                        if(!productAddedToTicket){
                             ticketRepository.removeTicket(ticket);
-                            View.showMessage("Ticket eliminado");
+                            View.showMessage("TICKET NOT ADDED, TICKET EMPTY, A TICKET MUST CONTAIN AT LEAST ONE PRODUCT");
                         }
                         break;
 
                     case 10:
 
                         View.showInfoTickets(floristService.getOldTickets(Keyboard.readString("DATE 1: YYYY-MM-DD"), Keyboard.readString("DATE 2: YYYY-MM-DD")));
+
 
                         break;
 

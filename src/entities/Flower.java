@@ -32,11 +32,11 @@ public class Flower extends Product {
 
     @Override
     public String showInfoWithOutQuantity() {
-        return "Nombre flor: " + super.getName() + "\nColor: " + this.color + "\nPrecio: " + super.getPrice() + "€";
+        return "->PRODUCT: " + super.getName() + "  ->COLOR: " + this.color + "  ->PRICE: " + super.getPrice() + "€";
     }
 
     @Override
     public String showInfoWithQuantity() {
-        return "Nombre flor: " + super.getName() + "\nColor: " + this.color + "\nPrecio: " + super.getPrice() + "€\n" + super.getQuantity() + " Uds";
+        return "->PRODUCT: " + super.getName() + "  ->COLOR: " + this.color + "  ->PRICE: " + super.getPrice() + "€  ->QUANTITY: " + super.getQuantity() + " Uds";
     }
 }

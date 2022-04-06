@@ -101,8 +101,8 @@ public class FloristService {
     public Ticket getOldTickets(String date1, String date2){
 
         Ticket result = null;
-
-        for(Ticket ticket: ticketRepository.getOldTickets(date1,date2)){
+        List<Ticket> tickets = ticketRepository.getOldTickets(date1,date2);
+        for(Ticket ticket: tickets){
 
             result = setProductsOnTicket(ticket);
         }

@@ -1,17 +1,21 @@
 package entities;
 
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class Ticket{
 
     private int numTicket;
     private String date;
     private double total;
+    private List<Product> products;
 
     public Ticket() {
         numTicket = 0;
         date = "";
         total = 0;
+        products = new ArrayList<>();
     }
 
     public double getTotal() {
@@ -26,6 +30,10 @@ public class Ticket{
         return numTicket;
     }
 
+    public List<Product> getProducts() {
+        return products;
+    }
+
     public void setNumTicket(int numTicket) {
         this.numTicket = numTicket;
     }
@@ -36,6 +44,10 @@ public class Ticket{
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public String toString(){

@@ -11,46 +11,32 @@ public class View {
 
             showMessage("TREES:");
 
-            trees.forEach(x -> showMessage(x.showInfo()));
+            trees.forEach(x -> showMessage(x.showInfoWithQuantity()));
 
             showMessage("-----------------\n");
 
             showMessage("FLOWERS:");
 
-            flowers.forEach(x -> showMessage(x.showInfo()));
+            flowers.forEach(x -> showMessage(x.showInfoWithQuantity()));
 
             showMessage("-----------------\n");
 
             showMessage("DECORATIONS:");
 
-            decors.forEach(x -> showMessage(x.showInfo()));
+            decors.forEach(x -> showMessage(x.showInfoWithQuantity()));
 
             showMessage("-----------------\n");
 
     }
 
-    public static void showInfoTickets(Ticket ticket, List<Product> trees, List<Product> flowers, List<Product> decors ) {
+    public static void showInfoTickets(Ticket ticket){
 
-        showMessage(ticket.toString());
+        System.out.println("Nº TICKET: " + ticket.getNumTicket());
+        System.out.println("DATE: " + ticket.getDate());
 
-        showMessage("TREES:");
+        ticket.getProducts().forEach(x -> System.out.println(x.showInfoWithOutQuantity()));
 
-        trees.forEach(x -> showMessage(x.showInfo()));
-
-        showMessage("-----------------\n");
-
-        showMessage("FLOWERS:");
-
-        flowers.forEach(x -> showMessage(x.showInfo()));
-
-        showMessage("-----------------\n");
-
-        showMessage("DECORATIONS:");
-
-        decors.forEach(x -> showMessage(x.showInfo()));
-
-        showMessage("-----------------\n");
-
+        System.out.println("TOTAL: " + ticket.getTotal());
     }
 
     public static void showTotalValueFlorist(double totalValue) {

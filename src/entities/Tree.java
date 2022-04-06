@@ -31,7 +31,12 @@ public class Tree extends Product {
     }
 
     @Override
-    public String showInfo() {
+    public String showInfoWithOutQuantity() {
+        return "Nombre árbol: " + super.getName() + "\nAltura: " + this.height + "\nPrecio: " + super.getPrice() + "€";
+    }
+
+    @Override
+    public String showInfoWithQuantity() {
         return "Nombre árbol: " + super.getName() + "\nAltura: " + this.height + "\nPrecio: " + super.getPrice() + "€\n" + super.getQuantity() + " Uds";
     }
 }

@@ -22,7 +22,7 @@ public class Flower extends Product {
         this.color = color;
     }
 
-    public String getcolor() {
+    public String getColor() {
         return this.color;
     }
 
@@ -31,7 +31,12 @@ public class Flower extends Product {
     }
 
     @Override
-    public String showInfo() {
+    public String showInfoWithOutQuantity() {
+        return "Nombre flor: " + super.getName() + "\nColor: " + this.color + "\nPrecio: " + super.getPrice() + "€";
+    }
+
+    @Override
+    public String showInfoWithQuantity() {
         return "Nombre flor: " + super.getName() + "\nColor: " + this.color + "\nPrecio: " + super.getPrice() + "€\n" + super.getQuantity() + " Uds";
     }
 }

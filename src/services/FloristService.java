@@ -1,10 +1,13 @@
 package services;
 
 import entities.Product;
+import entities.Ticket;
 import repositories.DecorRepository;
 import repositories.FlowerRepository;
 import repositories.TicketRepository;
 import repositories.TreeRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class FloristService {
@@ -77,6 +80,41 @@ public class FloristService {
 
         }
         return result;
+    }
+
+    public void setTotalValueTicket(Ticket ticket){
+        double total;
+        total = ticketRepository.getTotalValueTreesByTicket(ticket) +
+                ticketRepository.getTotalValueFlowersByTicket(ticket) +
+                ticketRepository.getTotalValueDecorsByTicket(ticket);
+
+        ticketRepository.setTotalValueTicket(ticket, total);
+    }
+
+    public Ticket getOldTickets(String date1, String date2){
+
+        Ticket result = null;
+
+        for(Ticket ticket: ticketRepository.getOldTickets(date1,date2)){
+
+            result = setProductsOnTicket(ticket);
+        }
+
+        return result;
+    }
+
+    public Ticket setProductsOnTicket(Ticket ticket){
+
+        List<Product> products = new ArrayList<>();
+
+        products.addAll(ticketRepository.getListTreesByTicket(ticket));
+        products.addAll(ticketRepository.getListFlowersByTicket(ticket));
+        products.addAll(ticketRepository.getListDecorsByTicket(ticket));
+
+        ticket.getProducts().addAll(products);
+
+        return ticket;
+
     }
 
 

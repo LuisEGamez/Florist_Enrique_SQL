@@ -2,7 +2,6 @@ package repositories;
 
 import entities.Flower;
 import entities.Product;
-import entities.Tree;
 import vista.View;
 
 import java.sql.*;
@@ -38,7 +37,7 @@ public class FlowerRepository {
         try {
             miQuery = connection.prepareStatement("SELECT * FROM flowers WHERE name = ? AND color = ?");
             miQuery.setString(1, flower.getName());
-            miQuery.setString(2, flower.getcolor());
+            miQuery.setString(2, flower.getColor());
             rs = miQuery.executeQuery();
 
             if (rs.next()){
@@ -60,7 +59,7 @@ public class FlowerRepository {
 
         miQuery = connection.prepareStatement("INSERT INTO flowers (name, color, price, quantity) VALUES ( ? , ?, ?, ?)");
         miQuery.setString(1, flower.getName());
-        miQuery.setString(2, flower.getcolor());
+        miQuery.setString(2, flower.getColor());
         miQuery.setDouble(3, flower.getPrice());
         miQuery.setInt(4, flower.getQuantity());
 
@@ -74,7 +73,7 @@ public class FlowerRepository {
         miQuery = connection.prepareStatement("UPDATE flowers SET quantity = quantity + ?  WHERE name = ? AND color = ?");
         miQuery.setDouble(1, flower.getQuantity());
         miQuery.setString(2, flower.getName());
-        miQuery.setString(3, flower.getcolor());
+        miQuery.setString(3, flower.getColor());
 
         return miQuery;
     }
@@ -86,7 +85,7 @@ public class FlowerRepository {
         miQuery = connection.prepareStatement("UPDATE flowers SET quantity = quantity - ?  WHERE name = ? AND color = ?");
         miQuery.setDouble(1, flower.getQuantity());
         miQuery.setString(2, flower.getName());
-        miQuery.setString(3, flower.getcolor());
+        miQuery.setString(3, flower.getColor());
 
         return miQuery;
     }
@@ -98,7 +97,7 @@ public class FlowerRepository {
 
         miQuery = connection.prepareStatement("SELECT quantity FROM flowers WHERE name = ? And color = ?");
         miQuery.setString(1, flower.getName());
-        miQuery.setString(2, flower.getcolor());
+        miQuery.setString(2, flower.getColor());
         rs = miQuery.executeQuery();
         if(rs.next()) {
             quantity = rs.getInt("quantity");
@@ -166,7 +165,7 @@ public class FlowerRepository {
 
             query = connection.prepareStatement("SELECT * FROM flowers WHERE name = ? AND color = ?");
             query.setString(1, flower.getName());
-            query.setString(2, flower.getcolor());
+            query.setString(2, flower.getColor());
             rs = query.executeQuery();
             while (rs.next()){
                 flower.setId(rs.getInt("id_flower"));

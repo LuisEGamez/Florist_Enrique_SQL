@@ -4,7 +4,6 @@ import repositories.FlowerRepository;
 import repositories.TicketRepository;
 import repositories.TreeRepository;
 import services.FloristService;
-import services.TicketService;
 import tools.Keyboard;
 import vista.View;
 
@@ -17,7 +16,6 @@ public class App {
     public static void main(String[] args) {
 
         Florist florist = new Florist("Margarita", "C/ Peru 254", "698574526");
-
         Tree tree;
         Flower flower;
         Decor decor;
@@ -43,8 +41,6 @@ public class App {
 
         FloristService floristService = new FloristService(treeRepository,flowerRepository,decorRepository,ticketRepository);
 
-        TicketService ticketService = new TicketService(ticketRepository,treeRepository, flowerRepository, decorRepository);
-
         //------------- Menu ------------------
 
         do{
@@ -66,7 +62,6 @@ public class App {
                         View.treeAdded(treeRepository.addTree(tree));
                         break;
                     case 2:
-
                         flower = flowerRepository.createFlower(Keyboard.readString("ENTER NAME."), Keyboard.readString("ENTER COLOR."),
                                                                 Keyboard.readDouble("ENTER PRICE"), Keyboard.readInt("ENTER QUANTITY"));
 
@@ -183,7 +178,7 @@ public class App {
 
                             }
                         }while (choice2 != 0);
-                        ticketService.setTotalValueTicket(ticket);
+                        floristService.setTotalValueTicket(ticket);
                         if(!productAdded){
                             ticketRepository.removeTicket(ticket);
                             View.showMessage("Ticket eliminado");
@@ -192,13 +187,13 @@ public class App {
 
                     case 10:
 
-                        ticketService.getOldTickets(Keyboard.readString("DATE 1: YYYY-MM-DD"), Keyboard.readString("DATE 2: YYYY-MM-DD"));
+                        View.showInfoTickets(floristService.getOldTickets(Keyboard.readString("DATE 1: YYYY-MM-DD"), Keyboard.readString("DATE 2: YYYY-MM-DD")));
 
                         break;
 
                     case 11:
-                        
-                        //View.showTotalSales(ticketService.getTotalSales());
+
+                        View.showTotalSales(ticketRepository.getTotalPricesFromDatabase());
 
                         break;
                 }

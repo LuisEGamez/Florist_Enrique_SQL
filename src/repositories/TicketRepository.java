@@ -353,33 +353,26 @@ public class TicketRepository {
 
     }
 
+    public double getTotalPricesFromDatabase(){
 
-    /*public List<Ticket> getOldSales(LocalDate date1, LocalDate date2){
+        double result = 0;
+        Statement miQuery;
+        ResultSet rs;
 
-        List<Ticket> oldTickets = new ArrayList<>();
-
-        for (int i = 0; i<findAll().size(); i++){
-
-            if(findOne(i).getDate().compareTo(date2) < 0 && findOne(i).getDate().compareTo(date1) > 0 ){
-
-                oldTickets.add(findOne(i));
-
+        try {
+            miQuery = connection.createStatement();
+            rs = miQuery.executeQuery("SELECT SUM(Total) AS Total FROM tickets");
+            if (rs.next()) {
+                result = rs.getDouble("Total");
             }
+
+
+        } catch (SQLException e) {
+            View.showMessage("Error al sumar el total de  ticket");
+            e.printStackTrace();
         }
+        return result;
 
-        return oldTickets;
-    }*/
-
-    /*public List<Double> getTotalPricesFromDatabase(){
-
-        List<Double> totalSalesList = new ArrayList<>();
-
-        for(int i = 0; i<database.getTickets().size(); i++){
-            totalSalesList.add(database.getTickets().get(i).getTotal());
-
-        }
-        return totalSalesList;
-
-    }*/
+    }
 
 }

@@ -64,6 +64,12 @@ public abstract class Product {
         return quantity;
     }
 
-    public abstract String showInfo();
+    public abstract String showInfoWithOutQuantity();
+
+    public abstract String showInfoWithQuantity();
+
+
+
+
 
 }

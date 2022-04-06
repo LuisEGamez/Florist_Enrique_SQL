@@ -43,7 +43,12 @@ public class Decor extends Product {
     }
 
     @Override
-    public String showInfo() {
+    public String showInfoWithOutQuantity() {
+        return "Nombre decoración: " + super.getName() + "\nMaterial: " + this.typeOfMaterial + "\nPrecio: " + super.getPrice() + "€";
+    }
+
+    @Override
+    public String showInfoWithQuantity() {
         return "Nombre decoración: " + super.getName() + "\nMaterial: " + this.typeOfMaterial + "\nPrecio: " + super.getPrice() + "€\n" + super.getQuantity() + " Uds";
     }
 

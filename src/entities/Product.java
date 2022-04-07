@@ -2,10 +2,10 @@ package entities;
 
 public abstract class Product {
 
-    protected int id;
-    protected String name;
-    protected double price;
-    protected int quantity;
+    private int id;
+    private String name;
+    private double price;
+    private int quantity;
 
     public Product() {
     }
